@@ -1,0 +1,21 @@
+cmake_minimum_required(VERSION 3.22.1)
+
+project(ASSIGNMENT_1)
+
+
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+
+file(GLOB SRC_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
+file(GLOB OUTPUT_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/output/*.cpp")
+
+set(SOURCES ${SRC_SOURCES} ${OUTPUT_SOURCES})
+
+
+foreach(SOURCE ${SOURCES})
+    get_filename_component(EXECUTABLE_NAME ${SOURCE} NAME_WE)
+    add_executable(${EXECUTABLE_NAME} ${SOURCE})
+    set_target_properties(${EXECUTABLE_NAME} PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    )
+endforeach()

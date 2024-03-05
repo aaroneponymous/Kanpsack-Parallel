@@ -1,0 +1,134 @@
+Assignment 1
+Aaron Paul
+apaul9@u.rochester.edu
+
+Project Directory includes:
+
+    1. build/
+        - contains build files after running cmake -S ..
+    2. inputs/
+        - contains txt files with weights and values to be used as inputs in thee executables
+    3. output/
+        - serial_results.cpp: Runs the serial knapsack function on each input file 10 times and outputs
+          a "serial_results.txt" file which contains the Max Value returned by the function and execution time 
+          for each iteration and the average execution time of those 10 iterations (executable: serial_results)
+
+        - parallel_results.cpp: Runs the parallel knapsack function on each input file 10 times and outputs
+          a "parallel_results.txt" file which contains the Max Value returned by the function and execution
+          time for each iteration and the execution time of those 10 iterations (executable: parallel_results)
+    4. src/
+        - knapsack_parallel.cpp: Implementation of the parallel knapsack function, and a main routine which accepts 
+          an input txt file number of threads to run the problem on, prints out the max value returned and
+          the time taken for the program to finish
+        - knapsack_serial.cpp: Implementation of the serial knapsack function, and a main routine which accepts 
+          an input txt file and prints the max value returned and the time taken to execute the function
+    5. CMakeLists.txt
+        - For generating build - make - files
+
+
+Building & Running Executables:
+The executables are already compiled and present in the top-level directory,
+however if you'd like to build the executables from scratch follow these
+directions:
+
+Run these commands in the Project Directory sequentially:
+
+(Remove any Makefile/CMake log file(s) present in the build/):
+> cd build/ && rm -rf * && cmake -S .. && make && cd ..
+Alternatively,
+> rm -rf build/ (if present)
+> mkdir build/
+> cd build/ && cmake -S .. && make && cd ..
+
+Commands to run executables:
+
+1. To Output Results of Serial Algorithm on Inputs (already present)
+> ./serial_results
+2. To Output Results of Parallel Algorithm on Inputs (already present)
+> ./parallel_results
+3. To run Serial Algorithm on user-provided inputs
+> ./knapsack_serial <input-file>
+4. To run Parallel Algorithm on user-provided inputs
+> ./knapsack_parallel <input-file> <no-of-threads>
+
+
+
+Parallel Knapsack Program (see knapsack_parallel.cpp)
+
+Implementation Details
+The implementation is divided into two main parts: the Barrier class and the parallel_knapsack function.
+
+Barrier Class
+The Barrier class is a synchronization primitive that can be used to synchronize threads. It allows multiple threads 
+to wait for each other to reach a certain point in their execution (the barrier), before they all continue execution.
+
+The Barrier class uses a std::mutex for mutual exclusion and a std::condition_variable for blocking and waking up threads. 
+It also keeps track of the number of threads that need to reach the barrier (barrier_threads), the number of threads that 
+have not yet reached the barrier (pending_threads_), and the generation of the barrier (barrier_gen_).
+
+The Wait function is used by a thread to indicate that it has reached the barrier. If it is the last thread to reach 
+the barrier, it resets the barrier and wakes up all other threads. If it is not the last thread, it blocks until all 
+other threads have reached the barrier.
+
+Parallel Knapsack Function (Algorithm)
+
+The parallel_knapsack function solves the 0/1 Knapsack problem using a bottom-up dynamic programming approach. 
+
+The breakdown is as follows:
+
+
+Initialization: 
+Two vectors prev_dp and curr_dp are initialized to store the maximum value that can be obtained 
+for each capacity from 0 to the given capacity. They are initially filled with zeros. The prev_dp vector represents 
+the maximum value for the previous item, while curr_dp represents the maximum value for the current item.
+
+Iteration: 
+The function iterates over each item (from 1 to n). For each item, it creates num_threads threads. 
+Each thread is responsible for a range of capacities.
+
+Computation: 
+For each capacity within the range of a thread, it checks if the current item can be included in the knapsack 
+(i.e., its weight is less than or equal to the capacity). If it can, it updates curr_dp[w] to be the maximum of prev_dp[w] 
+(the maximum value without including the current item) and prev_dp[w - weights[row - 1]] + values[row - 1] (the maximum 
+value including the current item). If the current item cannot be included, curr_dp[w] is set to prev_dp[w].
+
+Synchronization: 
+After each thread has computed the DP values for its range of capacities, it waits at the barrier until all threads 
+have reached the barrier. This ensures that all threads have finished their computation before moving on to the next item.
+
+Joining Threads: 
+After all threads have been created and started, the function waits for all of them to finish execution using thread.join().
+
+Swapping DP Arrays: 
+After all threads have finished execution for the current item, the function swaps prev_dp and curr_dp. 
+This makes the current DP array become the previous DP array for the next item, and resets the current DP array 
+to its initial state.
+
+Result: 
+After all items have been processed, the function returns the maximum value that can be included in the knapsack, 
+which is prev_dp[capacity].
+
+C++ Multi-Threading Features Used:
+
+std::thread
+
+std::mutex
+In my implementation, the mutex is used in the Barrier class to ensure that the threads don't interfere with each other when 
+updating the pending_threads_ and barrier_gen_ variables.
+
+std::condition_variable
+This is used in conjunction with a std::unique_lock to wait for a condition to become true. The condition variable is used in the 
+Barrier class to make threads wait until all threads have reached the barrier.
+
+std::unique_lock 
+This is a lock that owns and manages the locking and unlocking of a mutex. The unique lock is used in the Barrier class to lock 
+the mutex when a thread reaches the barrier and to unlock it when all threads have reached the barrier.
+
+
+Lambda functions
+I use a lambda function to define the task that each thread should perform.
+
+std::thread::join()
+
+Barrier Synchronization: 
+Implemented in Barrier class.

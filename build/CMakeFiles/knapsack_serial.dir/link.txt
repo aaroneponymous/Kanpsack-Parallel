@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/knapsack_serial.dir/src/knapsack_serial.cpp.o -o ../knapsack_serial 
