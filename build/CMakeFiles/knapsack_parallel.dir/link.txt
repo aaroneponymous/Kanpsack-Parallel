@@ -1,1 +1,0 @@
-/usr/bin/c++ CMakeFiles/knapsack_parallel.dir/src/knapsack_parallel.cpp.o -o ../knapsack_parallel 

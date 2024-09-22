@@ -1,1 +1,0 @@
-/usr/bin/c++ CMakeFiles/parallel_results.dir/output/parallel_results.cpp.o -o ../parallel_results 

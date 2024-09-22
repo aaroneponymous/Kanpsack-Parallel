@@ -1,6 +1,0 @@
-/home/aaroneponymous/Aaron's Folder/University/Semesters/spring_2024/assignment_1/build/CMakeFiles/knapsack_parallel.dir
-/home/aaroneponymous/Aaron's Folder/University/Semesters/spring_2024/assignment_1/build/CMakeFiles/knapsack_serial.dir
-/home/aaroneponymous/Aaron's Folder/University/Semesters/spring_2024/assignment_1/build/CMakeFiles/parallel_results.dir
-/home/aaroneponymous/Aaron's Folder/University/Semesters/spring_2024/assignment_1/build/CMakeFiles/serial_results.dir
-/home/aaroneponymous/Aaron's Folder/University/Semesters/spring_2024/assignment_1/build/CMakeFiles/edit_cache.dir
-/home/aaroneponymous/Aaron's Folder/University/Semesters/spring_2024/assignment_1/build/CMakeFiles/rebuild_cache.dir
